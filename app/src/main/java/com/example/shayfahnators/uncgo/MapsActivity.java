@@ -1,8 +1,11 @@
 package com.example.shayfahnators.uncgo;
 
+import android.content.Context;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -60,6 +63,22 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        GPSTracker gps = new GPSTracker(this);
+        if(gps.canGetLocation()) { // gps enabled} // return boolean true/false
+
+
+            mMap.addMarker(new MarkerOptions().position(
+                    new LatLng(gps.getLatitude(), gps.getLongitude())).title("#yoloswag"));
+            System.out.println(mMap.getMaxZoomLevel());
+            System.out.println(mMap.getMinZoomLevel());
+            System.out.println(gps.getLatitude());
+            System.out.println(gps.getLongitude());
+            float zoom = 16;
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gps.getLatitude(), gps.getLongitude()), zoom));
+           // mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+
+        }else{
+            gps.showSettingsAlert();
+        }
     }
 }
