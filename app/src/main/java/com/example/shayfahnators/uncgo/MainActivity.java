@@ -1,5 +1,7 @@
 package com.example.shayfahnators.uncgo;
 
+import android.content.Context;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.app.Activity;
 import android.content.Intent;
@@ -7,21 +9,54 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+
 
 public class MainActivity extends Activity {
 GoogleMap mainMap;
+   final BuildingHash buildingLocations=new BuildingHash();
+   ListView listView;
+    ArrayList loadedContacts;
+    List<String> tasks;
+    ArrayAdapter<String> adapter;
+    Context context;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final ListView list = (ListView) findViewById(R.id.list_view);
+        list.setAdapter(new custom_list(this, buildingLocations.getKeys()));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                String name=buildingLocations.getKeys().get(position);
+                System.out.println("name:" +name);
+                latLong destination= buildingLocations.getBuildingCoords(name);
+
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destination.getLat() + "," + destination.getLon() + "&mode=w");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
     }
 
 
@@ -32,102 +67,16 @@ GoogleMap mainMap;
 
 
 
-        String[] currentLoc={
-                "Current Location",
-                "Aycock Auditorium",
-                "Brown Building",
-                "Bryan School of Business & Economics",
-                "Carmichael Building",
-                "Curry Building",
-                "Dining Hall",
-                "Eberhart Building",
-                "Elliott University Center",
-                "Ferguson Building",
-                "Financial Aid Office",
-                "Forney Building",
-                "Foust Building",
-                "Gatewood Studio Arts Center",
-                "Gove Student Health Center",
-                "Graham Building",
-                "Jackson Library",
-                "Mary Channing Coleman Building",
-                "McIver Building",
-                "McIver St. Parking Deck",
-                "McNutt Building",
-                "Moore Building",
-                "Moore Humanities & Research Administration",
-                "Mossman Building",
-                "Music Building",
-                "Oakland Ave. Parking Deck",
-                "Petty Science Building",
-                "School of Education",
-                "Sink Building",
-                "Stone Building",
-                "Student Recreation Center",
-                "Sullivan Science Building",
-                "Taylor Theatre",
-                "Visitor Center",
-                "Walker Ave. Parking Deck",
-                "Weatherspoon Art Museum"
+        ArrayList<String> yo = buildingLocations.getKeys();
 
-        };
-        String[] dest={
-                "Aycock Auditorium",
-                "Brown Building",
-                "Bryan School of Business & Economics",
-                "Carmichael Building",
-                "Curry Building",
-                "Dining Hall",
-                "Eberhart Building",
-                "Elliott University Center",
-                "Ferguson Building",
-                "Financial Aid Office",
-                "Forney Building",
-                "Foust Building",
-                "Gatewood Studio Arts Center",
-                "Gove Student Health Center",
-                "Graham Building",
-                "Jackson Library",
-                "Mary Channing Coleman Building",
-                "McIver Building",
-                "McIver St. Parking Deck",
-                "McNutt Building",
-                "Moore Building",
-                "Moore Humanities & Research Administration",
-                "Mossman Building",
-                "Music Building",
-                "Oakland Ave. Parking Deck",
-                "Petty Science Building",
-                "School of Education",
-                "Sink Building",
-                "Stone Building",
-                "Student Recreation Center",
-                "Sullivan Science Building",
-                "Taylor Theatre",
-                "Visitor Center",
-                "Walker Ave. Parking Deck",
-                "Weatherspoon Art Museum"
-
-        };
-        ArrayAdapter<String> stringArrayAdapter=
-                new ArrayAdapter<String>(
-                        this,
-                        android.R.layout.simple_spinner_dropdown_item,
-                        dest);
-        Spinner spinner =
-                (Spinner)  findViewById(R.id.destination);
-        spinner.setAdapter(stringArrayAdapter);
+        for(int i=0; i < yo.size(); i++){
+            System.out.println(yo.get(i));
+        }
 
 
-        ArrayAdapter<String> stringArrayAdapter1=
-                new ArrayAdapter<String>(
-                        this,
-                        android.R.layout.simple_spinner_dropdown_item,
-                        currentLoc);
-        Spinner spinner1 =
-                (Spinner)  findViewById(R.id.currentL);
-        spinner1.setAdapter(stringArrayAdapter1);
-
+       listView = (ListView) findViewById(R.id.list_view);
+       ListView list = (ListView) findViewById(R.id.list_view);
+        list.setAdapter(new custom_list(this, yo));
         return true;
 
 
@@ -136,9 +85,13 @@ GoogleMap mainMap;
     }
 public void onClickSubmit(View v)
 {
-    Intent intent=new Intent(this, MapsActivity.class);
-
-   startActivity(intent);
+   latLong destination= buildingLocations.getBuildingCoords("McNutt Building");
+    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destination.getLat() + "," + destination.getLon() + "&mode=w");
+    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+    mapIntent.setPackage("com.google.android.apps.maps");
+    startActivity(mapIntent);
+    //Intent intent=new Intent(this, MapsActivity.class);
+    //startActivity(intent);
 }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

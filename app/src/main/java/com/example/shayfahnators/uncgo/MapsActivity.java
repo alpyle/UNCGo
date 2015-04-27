@@ -73,7 +73,7 @@ public class MapsActivity extends FragmentActivity {
             System.out.println(mMap.getMinZoomLevel());
             System.out.println(gps.getLatitude());
             System.out.println(gps.getLongitude());
-            float zoom = 16;
+            float zoom = 17;
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(gps.getLatitude(), gps.getLongitude()), zoom));
            // mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
 
