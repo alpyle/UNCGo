@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,7 +29,7 @@ import java.util.Map;
 
 public class MainActivity extends Activity {
 GoogleMap mainMap;
-   final BuildingHash buildingLocations=new BuildingHash();
+   //final BuildingHash buildingLocations=new BuildingHash();
    ListView listView;
     ArrayList loadedContacts;
     List<String> tasks;
@@ -41,25 +42,39 @@ GoogleMap mainMap;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final ListView list = (ListView) findViewById(R.id.list_view);
-        list.setAdapter(new custom_list(this, buildingLocations.getKeys()));
+        final GPSTracker currloc=new GPSTracker(this);
+        latLong destination;
+        Building pettyBuilding=new Building("Petty building","petty",new latLong(36.069389,-79.807702),null,new latLong(36.069453,-79.807625),new latLong(36.069337,-79.807925),new latLong(36.068905,-79.807818));
+        destination=pettyBuilding.bestEntrance(new latLong(currloc.getLatitude(),currloc.getLongitude()));
+        //Building petty=new Building()
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destination.getLat() + "," + destination.getLon() + "&mode=w");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+        /*final ListView list = (ListView) findViewById(R.id.list_view);
+       list.setAdapter(new custom_list(this, buildingLocations.getKeys()));
+       final GPSTracker currloc=new GPSTracker(this);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                String name=buildingLocations.getKeys().get(position);
-                System.out.println("name:" +name);
-                latLong destination= buildingLocations.getBuildingCoords(name);
-
+                //String name=buildingLocations.getKeys().get(position);
+                //System.out.println("name:" +name);
+                //latLong destination= buildingLocations.getBuildingCoords(name);
+                latLong destination;
+                Building pettyBuilding=new Building("Petty building","petty",new latLong(36.069389,-79.807702),null,new latLong(36.069453,-79.807625),new latLong(36.069337,-79.807925),new latLong(36.068905,-79.807818));
+                destination=pettyBuilding.bestEntrance(new latLong(currloc.getLatitude(),currloc.getLongitude()));
+                //Building petty=new Building()
                 Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destination.getLat() + "," + destination.getLon() + "&mode=w");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
             }
         });
+        */
     }
 
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -83,6 +98,8 @@ GoogleMap mainMap;
 
 
     }
+    */
+    /*
 public void onClickSubmit(View v)
 {
    latLong destination= buildingLocations.getBuildingCoords("McNutt Building");
@@ -92,7 +109,7 @@ public void onClickSubmit(View v)
     startActivity(mapIntent);
     //Intent intent=new Intent(this, MapsActivity.class);
     //startActivity(intent);
-}
+}*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

@@ -1,21 +1,25 @@
+/*
 package com.example.shayfahnators.uncgo;
+
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
-
+*/
 /**
  * Created by Sarah on 4/16/2015.
- */
+*/
+
+/*
 public class BuildingHash {
 
 
-    Map<String, latLong> map = new Hashtable<>();
+    ArrayList<Building> map = new ArrayList<Building>();
     public BuildingHash(){
 
 
-        map.put("Aycock Auditorium", new latLong(36.067061, -79.806030));
+        map.add(new Building("Aycock Auditorium","AUD", new latLong(36.067061, -79.806030),null,null,null,null));
         map.put("Brown Building", new latLong(36.067812, -79.805881));
         map.put("Bryan School of Business & Economics", new latLong(36.066659, -79.811921));
         map.put("Carmichael Building", new latLong(36.067947, -79.806246));
@@ -51,9 +55,10 @@ public class BuildingHash {
         map.put("Walker Ave. Parking Deck", new latLong(36.067867, -79.812104));
         map.put("Weatherspoon Art Museum", new latLong(36.066260, -79.805854));
     }
+    /*
     public latLong getBuildingCoords(String value)
     {
-        return map.get(value);
+       //;
     }
     public ArrayList<String> getKeys()
     {
@@ -71,3 +76,5 @@ public class BuildingHash {
     }
 
 }
+
+*/

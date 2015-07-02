@@ -6,6 +6,8 @@ package com.example.shayfahnators.uncgo;
 public class Building {
     /** the geographic center of the building; used to determine which entrance the user is closest to*/
     private latLong geoCenter;
+    public String buildingName;
+    public String preCode;
 
     /**the main north entrance*/
     private latLong northEntrance;
@@ -24,7 +26,7 @@ public class Building {
      * @param west
      * @param south
      */
-    public Building(latLong Center, latLong north, latLong east, latLong west, latLong south)
+    public Building(String fullName, String buildingAbbreviation, latLong Center, latLong north, latLong east, latLong west, latLong south)
     {
         geoCenter=Center;
         northEntrance=north;
@@ -49,19 +51,53 @@ public class Building {
         boolean closerByLongitude;
         double longdiff=(currentLocation.getLon()-geoCenter.getLon())/2;
         double latdiff=currentLocation.getLat()-geoCenter.getLat();
+        boolean entranceValid=false;
+        latLong ToReturn=null;
         if(longdiff>latdiff)
         {
             if(toTheEast){
-                return eastEntrance;
+                if(eastEntrance!=null)
+                {
+                    ToReturn= eastEntrance;
+                    entranceValid=true;
+                }
             }else{
-                return westEntrance;
+                if(westEntrance!=null)
+                {
+                    ToReturn = westEntrance;
+                    entranceValid = true;
+                }
+            }
+            if (!entranceValid)
+            {
+                if(this.geoCenter.getLon()-currentLocation.getLon()>0 && southEntrance!=null){
+                    ToReturn =southEntrance;
+                }else{
+                    ToReturn =northEntrance;
+                }
             }
         }else{
             if(toTheNorth){
-                return northEntrance;
+                if(northEntrance!=null) {
+                    ToReturn= northEntrance;
+                    entranceValid = true;
+                }
             }else{
-                return southEntrance;
+                if(southEntrance!=null) {
+                    ToReturn=southEntrance;
+                    entranceValid = true;
+                }
+            }
+            if(!entranceValid)
+            {
+                if(this.geoCenter.getLat()-currentLocation.getLat()>0&&eastEntrance!=null)
+                {
+                    return eastEntrance;
+                }else{
+                    return westEntrance;
+                }
             }
         }
+        return ToReturn;
     }
 }
